@@ -8,11 +8,10 @@ form.addEventListener('submit', async (e) => {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Linking…';
 
-  const serverUrl = document.getElementById('serverUrl').value.trim();
   const code = document.getElementById('code').value.trim();
 
   try {
-    await window.api.pair(serverUrl, code);
+    await window.api.pair(code);
     // On success the main process closes this window.
   } catch (err) {
     errorEl.textContent = err.message || 'Failed to link device';

@@ -159,8 +159,8 @@ function createApiRouter(botClient) {
     const code = randomCode(6);
     const expiresAt = Date.now() + PAIRING_CODE_TTL_MS;
     db.prepare(
-      'INSERT INTO pairing_codes (code, group_id, expires_at, used) VALUES (?, ?, ?, 0)'
-    ).run(code, group.id, expiresAt);
+      'INSERT INTO pairing_codes (code, group_id, user_id, expires_at, used) VALUES (?, ?, ?, ?, 0)'
+    ).run(code, group.id, req.session.userId, expiresAt);
 
     res.json({ code, expiresAt });
   });
@@ -185,7 +185,11 @@ function createPairRouter() {
     if (!group) return res.status(400).json({ error: 'group_not_found' });
 
     const token = randomToken(32);
-    db.prepare('INSERT INTO devices (group_id, token) VALUES (?, ?)').run(group.id, token);
+    db.prepare('INSERT INTO devices (group_id, user_id, token) VALUES (?, ?, ?)').run(
+      group.id,
+      pairing.user_id,
+      token
+    );
     db.prepare('UPDATE pairing_codes SET used = 1 WHERE code = ?').run(pairing.code);
 
     res.json({ token, groupId: group.id, groupName: group.name });

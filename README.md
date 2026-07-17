@@ -74,17 +74,28 @@ once it's not just running on your own machine.
 
 ## 4. Setting up the desktop app (each person)
 
+The server's address is baked into the app at build time (`desktop-client/config.js`)
+so people linking their device only ever have to enter a pairing code. Set it
+before building:
+
+```js
+// desktop-client/config.js
+module.exports = {
+  SERVER_URL: 'https://your-server-or-tunnel-url',
+};
+```
+
 ```bash
 cd desktop-client
 npm install
 npm start
 ```
 
-First run shows a small **Link this device** window: enter the server URL and
-a pairing code. Get the code from the group page on the dashboard (**Generate
-code**, valid 10 minutes, one-time use). After linking, the window disappears
-and the app becomes an invisible overlay that lights up whenever someone posts
-in that group's channel.
+First run shows a small **Link this device** window: just enter a pairing
+code. Get the code from the group page on the dashboard (**Generate code**,
+valid 10 minutes, one-time use). After linking, the window disappears and the
+app becomes an invisible overlay that lights up whenever someone posts in
+that group's channel.
 
 - `Ctrl+Shift+Q` — quit
 - `Ctrl+Shift+L` — re-open the link window (e.g. to switch to a different group)
@@ -100,7 +111,9 @@ npm run build
 
 Produces an installer in `desktop-client/dist/` (`.exe` / `.dmg` /
 `.AppImage`). Send that to each group member — after install, they run it
-once, link with their code, and it auto-starts from then on.
+once, link with their code, and it auto-starts from then on. If the server's
+address ever changes, update `config.js` and rebuild — everyone will need the
+new installer.
 
 ## Notes / things to know
 

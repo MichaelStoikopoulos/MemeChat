@@ -1,6 +1,6 @@
 {
   "name": "memechat-desktop",
-  "version": "2.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "MemeChat desktop overlay",
   "main": "main.js",
@@ -23,8 +23,9 @@
     "mac": { "target": "dmg" },
     "linux": { "target": "AppImage" },
     "nsis": {
-      "oneClick": true,
-      "perMachine": false
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

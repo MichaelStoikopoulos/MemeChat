@@ -2,9 +2,31 @@ const { app, BrowserWindow, ipcMain, globalShortcut, screen } = require('electro
 const path = require('path');
 const fs = require('fs');
 const { io } = require('socket.io-client');
+const { SERVER_URL } = require('./config');
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
-const DROP_DISPLAY_MS = 8000;
+// Safety net only: the overlay normally hides itself once the renderer
+// decides a drop is done (image/text timer, or a video's "ended" event).
+// This just guarantees it can never get stuck open if that signal is lost.
+const MAX_DROP_DISPLAY_MS = 60000;
+
+// Prevent two copies of the app running at once (e.g. auto-start on login
+// plus a manual launch) — that was causing every drop to show twice, once
+// per running instance, each with its own overlay window and socket.
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+  return;
+}
+
+app.on('second-instance', () => {
+  // Someone tried to launch a second copy; just surface the link window
+  // (useful for switching groups) instead of letting a duplicate run.
+  createLinkWindow();
+  if (linkWindow) {
+    linkWindow.show();
+    linkWindow.focus();
+  }
+});
 
 let linkWindow = null;
 let overlayWindow = null;
@@ -30,7 +52,7 @@ function createLinkWindow() {
   }
   linkWindow = new BrowserWindow({
     width: 420,
-    height: 360,
+    height: 280,
     resizable: false,
     title: 'Link this device',
     webPreferences: {
@@ -65,6 +87,7 @@ function createOverlayWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      autoplayPolicy: 'no-user-gesture-required',
     },
   });
   overlayWindow.setAlwaysOnTop(true, 'screen-saver');
@@ -86,10 +109,13 @@ function connectSocket(config) {
     overlayWindow.webContents.send('show-drop', payload);
     overlayWindow.showInactive();
 
+    // The renderer tells us (via 'hide-overlay') when the drop is actually
+    // done — a video's real "ended" event, or a fixed timer for images/text.
+    // This is just a backstop in case that signal never arrives.
     if (hideTimer) clearTimeout(hideTimer);
     hideTimer = setTimeout(() => {
       overlayWindow.hide();
-    }, DROP_DISPLAY_MS);
+    }, MAX_DROP_DISPLAY_MS);
   });
 
   socket.on('connect_error', (err) => {
@@ -97,14 +123,22 @@ function connectSocket(config) {
   });
 }
 
+ipcMain.on('hide-overlay', () => {
+  if (hideTimer) {
+    clearTimeout(hideTimer);
+    hideTimer = null;
+  }
+  if (overlayWindow) overlayWindow.hide();
+});
+
 function startWithConfig(config) {
   if (!overlayWindow) createOverlayWindow();
   connectSocket(config);
   app.setLoginItemSettings({ openAtLogin: true });
 }
 
-ipcMain.handle('pair-request', async (event, { serverUrl, code }) => {
-  const res = await fetch(`${serverUrl.replace(/\/$/, '')}/api/pair`, {
+ipcMain.handle('pair-request', async (event, { code }) => {
+  const res = await fetch(`${SERVER_URL}/api/pair`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ code }),
@@ -115,7 +149,7 @@ ipcMain.handle('pair-request', async (event, { serverUrl, code }) => {
   }
 
   const config = {
-    serverUrl: serverUrl.replace(/\/$/, ''),
+    serverUrl: SERVER_URL,
     token: data.token,
     groupId: data.groupId,
     groupName: data.groupName,

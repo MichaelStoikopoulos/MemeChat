@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <title>MemeChat Overlay</title>
     <style>
+      @font-face {
+        font-family: 'Poppins';
+        font-weight: 700;
+        font-style: normal;
+        src: url('fonts/Poppins-Bold.woff2') format('woff2');
+      }
       html, body {
         margin: 0;
         width: 100%;
@@ -22,45 +28,73 @@
         pointer-events: none;
       }
       #drop.visible { opacity: 1; }
-      .card {
-        background: rgba(20, 20, 24, 0.85);
-        border-radius: 16px;
-        padding: 20px;
+      .content {
+        position: relative;
         max-width: 60vw;
         max-height: 70vh;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 12px;
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+        gap: 14px;
       }
-      .card img {
-        max-width: 100%;
+      .content img,
+      .content video {
+        max-width: 60vw;
         max-height: 50vh;
-        border-radius: 8px;
+        border-radius: 10px;
         display: block;
+        filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.7));
       }
-      .card .text {
-        color: #f2f3f5;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 20px;
+      .author-badge {
+        position: absolute;
+        top: 0;
+        left: 12px;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 2;
+      }
+      .author-badge .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        background: #2b2d31;
+        object-fit: cover;
+      }
+      .author-badge .author-name {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #ffffff;
+        -webkit-text-stroke: 1.2px #000000;
+        paint-order: stroke fill;
+      }
+      .text {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #ffffff;
         text-align: center;
         max-width: 100%;
         word-wrap: break-word;
-      }
-      .card .author {
-        color: #b5bac1;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 13px;
+        -webkit-text-stroke: 1.5px #000000;
+        paint-order: stroke fill;
       }
     </style>
   </head>
   <body>
     <div id="drop">
-      <div class="card">
+      <div class="content">
+        <div class="author-badge">
+          <img id="avatar" class="avatar" alt="" />
+          <span id="author" class="author-name"></span>
+        </div>
         <img id="image" src="" alt="" />
+        <video id="video" autoplay></video>
         <div id="text" class="text"></div>
-        <div id="author" class="author"></div>
       </div>
     </div>
     <script src="overlay-renderer.js"></script>
