@@ -22,5 +22,12 @@ export default function Join() {
     );
   }
 
-  return <div className="page-center">Joining group…</div>;
+  return (
+    <div className="page-center">
+      <div>
+        <div className="spinner" />
+        <p style={{ marginTop: 16 }}>Joining group…</p>
+      </div>
+    </div>
+  );
 }

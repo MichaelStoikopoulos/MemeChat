@@ -17,7 +17,7 @@ export default function App() {
   }, []);
 
   if (user === undefined) {
-    return <div className="page-center">Loading…</div>;
+    return <div className="page-center"><div className="spinner" /></div>;
   }
 
   if (user === null) {

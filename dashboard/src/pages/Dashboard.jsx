@@ -54,7 +54,7 @@ export default function Dashboard({ user }) {
         {error && <p className="error">{error}</p>}
 
         {groups === null ? (
-          <p>Loading…</p>
+          <div className="spinner" />
         ) : groups.length === 0 ? (
           <p>You're not in any groups yet. Create one below.</p>
         ) : (
@@ -62,7 +62,9 @@ export default function Dashboard({ user }) {
             {groups.map((g) => (
               <li key={g.id}>
                 <a href={`/groups/${g.id}`} onClick={(e) => { e.preventDefault(); navigate(`/groups/${g.id}`); }}>
+                  <span className="group-avatar">{g.name.trim()[0]?.toUpperCase()}</span>
                   {g.name} {g.isOwner && <span className="badge">owner</span>}
+                  <span className="chevron">→</span>
                 </a>
               </li>
             ))}

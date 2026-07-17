@@ -23,6 +23,8 @@ export const api = {
   groups: () => request('/api/groups'),
   createGroup: (name) => request('/api/groups', { method: 'POST', body: JSON.stringify({ name }) }),
   group: (id) => request(`/api/groups/${id}`),
+  renameGroup: (id, name) => request(`/api/groups/${id}`, { method: 'PUT', body: JSON.stringify({ name }) }),
+  deleteGroup: (id) => request(`/api/groups/${id}`, { method: 'DELETE' }),
   setChannel: (id, guildId, channelId) =>
     request(`/api/groups/${id}/channel`, {
       method: 'PUT',

@@ -8,6 +8,7 @@ const cookieSession = require('cookie-session');
 
 const authRoutes = require('./routes/auth');
 const { createApiRouter, createPairRouter } = require('./routes/api');
+const downloadRoutes = require('./routes/download');
 const createSocketServer = require('./socket');
 const createBot = require('./discord/bot');
 
@@ -35,6 +36,7 @@ app.use(
 app.use('/auth', authRoutes);
 app.use('/api', createPairRouter());
 app.use('/api', createApiRouter(bot));
+app.use('/download', downloadRoutes);
 
 const dashboardDist = path.join(__dirname, '..', 'dashboard', 'dist');
 if (fs.existsSync(dashboardDist)) {

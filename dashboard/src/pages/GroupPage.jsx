@@ -13,6 +13,10 @@ export default function GroupPage() {
   const [selectedChannel, setSelectedChannel] = useState('');
   const [botInviteUrl, setBotInviteUrl] = useState('');
   const [pairing, setPairing] = useState(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [renaming, setRenaming] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     load();
@@ -24,6 +28,7 @@ export default function GroupPage() {
       .then((g) => {
         setGroup(g);
         setSelectedGuild(g.guild_id || '');
+        setRenameValue(g.name);
       })
       .catch((err) => setError(err.message));
   }
@@ -63,8 +68,34 @@ export default function GroupPage() {
     }
   }
 
+  async function handleRename(e) {
+    e.preventDefault();
+    const name = renameValue.trim();
+    if (!name || name === group.name) return;
+    setRenaming(true);
+    try {
+      await api.renameGroup(id, name);
+      load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRenaming(false);
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true);
+    try {
+      await api.deleteGroup(id);
+      navigate('/');
+    } catch (err) {
+      setError(err.message);
+      setDeleting(false);
+    }
+  }
+
   if (error) return <div className="page-center error">{error}</div>;
-  if (!group) return <div className="page-center">Loading…</div>;
+  if (!group) return <div className="page-center"><div className="spinner" /></div>;
 
   const inviteLink = `${window.location.origin}/join/${group.invite_code}`;
 
@@ -141,7 +172,12 @@ export default function GroupPage() {
 
         <section className="card">
           <h2>Link your desktop app</h2>
-          <p>Generate a one-time code (valid 10 minutes) and enter it in the desktop app's link window.</p>
+          <p>Don't have the desktop app installed yet? Grab the installer, run it, then link with a code below.</p>
+          <a className="btn btn-ghost" href="/download/desktop-app">⬇ Download desktop app</a>
+
+          <p style={{ marginTop: 18 }}>
+            Generate a one-time code (valid 10 minutes) and enter it in the desktop app's link window.
+          </p>
           <button className="btn" onClick={handleGenerateCode}>Generate code</button>
           {pairing && (
             <p className="pairing-code">
@@ -149,6 +185,51 @@ export default function GroupPage() {
             </p>
           )}
         </section>
+
+        {group.isOwner && (
+          <section className="card">
+            <h2>Group settings</h2>
+
+            <form className="channel-form" onSubmit={handleRename}>
+              <input
+                type="text"
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                placeholder="Group name"
+              />
+              <button
+                className="btn btn-ghost"
+                type="submit"
+                disabled={renaming || !renameValue.trim() || renameValue.trim() === group.name}
+              >
+                {renaming ? 'Renaming…' : 'Rename'}
+              </button>
+            </form>
+
+            <div className="danger-zone">
+              {!confirmingDelete ? (
+                <button className="btn btn-danger" onClick={() => setConfirmingDelete(true)}>
+                  Delete group
+                </button>
+              ) : (
+                <div className="danger-confirm">
+                  <p className="warn">
+                    This permanently deletes <strong>{group.name}</strong> and unlinks every paired
+                    device. This can't be undone.
+                  </p>
+                  <div className="danger-confirm-actions">
+                    <button className="btn btn-ghost" onClick={() => setConfirmingDelete(false)} disabled={deleting}>
+                      Cancel
+                    </button>
+                    <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>
+                      {deleting ? 'Deleting…' : 'Yes, delete it'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

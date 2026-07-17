@@ -83,6 +83,31 @@ function createApiRouter(botClient) {
     res.json({ ...group, isOwner: group.owner_id === req.session.userId, members, botInGuild });
   });
 
+  router.put('/groups/:id', (req, res) => {
+    const group = getGroupOr404(req, res);
+    if (!group) return;
+    if (group.owner_id !== req.session.userId) {
+      return res.status(403).json({ error: 'owner_only' });
+    }
+
+    const name = (req.body.name || '').trim();
+    if (!name) return res.status(400).json({ error: 'name_required' });
+
+    db.prepare('UPDATE groups SET name = ? WHERE id = ?').run(name, group.id);
+    res.json({ ok: true });
+  });
+
+  router.delete('/groups/:id', (req, res) => {
+    const group = getGroupOr404(req, res);
+    if (!group) return;
+    if (group.owner_id !== req.session.userId) {
+      return res.status(403).json({ error: 'owner_only' });
+    }
+
+    db.prepare('DELETE FROM groups WHERE id = ?').run(group.id);
+    res.json({ ok: true });
+  });
+
   router.put('/groups/:id/channel', (req, res) => {
     const group = getGroupOr404(req, res);
     if (!group) return;
