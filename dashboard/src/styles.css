@@ -1,0 +1,94 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1e1f22;
+  color: #f2f3f5;
+}
+
+a { color: #5865f2; }
+
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.page { min-height: 100vh; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  background: #2b2d31;
+  border-bottom: 1px solid #1e1f22;
+}
+
+.topbar-user { display: flex; align-items: center; gap: 12px; }
+
+.content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: #2b2d31;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.btn {
+  background: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: #f2f3f5; border: 1px solid #4e5058; }
+.btn-discord { background: #5865f2; margin-top: 16px; }
+
+input, select {
+  background: #1e1f22;
+  color: #f2f3f5;
+  border: 1px solid #4e5058;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.group-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.group-list a { text-decoration: none; font-size: 16px; }
+
+.badge {
+  font-size: 11px;
+  background: #4e5058;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.create-group { display: flex; gap: 8px; margin-top: 16px; }
+.channel-form { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.copy-row { display: flex; gap: 8px; }
+.copy-row input { flex: 1; }
+
+.member-list { list-style: none; padding: 0; }
+
+.pairing-code { font-size: 20px; margin-top: 12px; }
+
+.error { color: #f23f42; }
+.warn { color: #faa61a; }

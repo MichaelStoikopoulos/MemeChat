@@ -1,0 +1,20 @@
+{
+  "name": "meme-relay-server",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Dashboard + Discord bot server for Meme Relay",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "build:dashboard": "npm install --prefix dashboard && npm run build --prefix dashboard"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cookie-session": "^2.1.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

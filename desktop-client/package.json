@@ -1,0 +1,30 @@
+{
+  "name": "meme-relay-desktop",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Meme Relay desktop overlay",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.7.5"
+  },
+  "devDependencies": {
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.memerelay.desktop",
+    "productName": "Meme Relay",
+    "files": ["**/*", "!dist/**"],
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg" },
+    "linux": { "target": "AppImage" },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    }
+  }
+}
