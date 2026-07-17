@@ -40,7 +40,7 @@ export default function Dashboard({ user }) {
   return (
     <div className="page">
       <header className="topbar">
-        <h1>Meme Relay</h1>
+        <h1>MemeChat</h1>
         <div className="topbar-user">
           <span>{user.username}</span>
           <button className="btn btn-ghost" onClick={() => api.logout().then(() => window.location.reload())}>

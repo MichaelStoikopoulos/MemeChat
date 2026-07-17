@@ -13,7 +13,7 @@ export default function Login({ redirectAfter }) {
   return (
     <div className="page-center">
       <div className="card">
-        <h1>Meme Relay</h1>
+        <h1>MemeChat</h1>
         <p>Memes from your Discord channel, popped up on everyone's screen.</p>
         <button className="btn btn-discord" onClick={handleLogin}>
           Login with Discord

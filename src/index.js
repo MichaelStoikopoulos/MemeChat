@@ -52,5 +52,5 @@ if (fs.existsSync(dashboardDist)) {
 
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
-  console.log(`Meme Relay server listening on port ${PORT}`);
+  console.log(`MemeChat server listening on port ${PORT}`);
 });

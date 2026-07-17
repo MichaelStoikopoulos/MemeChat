@@ -1,4 +1,4 @@
-# Meme Relay v2
+# MemeChat
 
 A dashboard + Discord bot + desktop overlay app, so any number of independent
 **groups** can each watch their own Discord channel and get memes popped up on
@@ -54,7 +54,7 @@ Keep it alive with `pm2`:
 
 ```bash
 npm install -g pm2
-pm2 start src/index.js --name meme-relay
+pm2 start src/index.js --name memechat
 pm2 save && pm2 startup
 ```
 
