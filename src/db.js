@@ -1,7 +1,10 @@
 const path = require('path');
 const Database = require('better-sqlite3');
 
-const db = new Database(path.join(__dirname, '..', 'data.sqlite'));
+// DATA_DIR lets production point this at a persistent volume (e.g. Railway),
+// so the database survives redeploys instead of resetting each time.
+const dataDir = process.env.DATA_DIR || path.join(__dirname, '..');
+const db = new Database(path.join(dataDir, 'data.sqlite'));
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
