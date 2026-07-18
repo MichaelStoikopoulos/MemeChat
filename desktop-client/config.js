@@ -3,5 +3,5 @@
 // `npm run build` if the server's address changes (e.g. a new tunnel URL or
 // once it's on a real domain).
 module.exports = {
-  SERVER_URL: 'https://memechat-production-f040.up.railway.app/',
+  SERVER_URL: 'https://memechat-production-f040.up.railway.app',
 };

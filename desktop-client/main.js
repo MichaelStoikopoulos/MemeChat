@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, globalShortcut, screen } = require('electro
 const path = require('path');
 const fs = require('fs');
 const { io } = require('socket.io-client');
-const { SERVER_URL } = require('./config');
+const SERVER_URL = require('./config').SERVER_URL.replace(/\/+$/, '');
 
 const CONFIG_PATH = path.join(app.getPath('userData'), 'config.json');
 // Safety net only: the overlay normally hides itself once the renderer
