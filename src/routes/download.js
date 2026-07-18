@@ -16,6 +16,13 @@ function findInstaller() {
 const router = express.Router();
 
 router.get('/desktop-app', (req, res) => {
+  // In production the installer is published as a GitHub release asset
+  // instead of shipped with the deploy (avoids committing a ~75MB binary to
+  // the repo). Locally, fall back to whatever was just built in dist/.
+  if (process.env.DESKTOP_APP_DOWNLOAD_URL) {
+    return res.redirect(process.env.DESKTOP_APP_DOWNLOAD_URL);
+  }
+
   const filePath = findInstaller();
   if (!filePath) {
     return res.status(404).send('The desktop app installer has not been built yet.');
