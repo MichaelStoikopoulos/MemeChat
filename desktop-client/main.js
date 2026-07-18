@@ -107,7 +107,12 @@ function connectSocket(config) {
   socket.on('drop', (payload) => {
     if (!overlayWindow) return;
     overlayWindow.webContents.send('show-drop', payload);
+    // Hiding/showing the window repeatedly can let other windows drift
+    // above it on Windows even though it's still flagged topmost — re-assert
+    // both the topmost level and the stacking order on every drop.
+    overlayWindow.setAlwaysOnTop(true, 'screen-saver');
     overlayWindow.showInactive();
+    overlayWindow.moveTop();
 
     // The renderer tells us (via 'hide-overlay') when the drop is actually
     // done — a video's real "ended" event, or a fixed timer for images/text.

@@ -1,6 +1,6 @@
 {
   "name": "memechat-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Dashboard + Discord bot server for MemeChat",
   "main": "src/index.js",
